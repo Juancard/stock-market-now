@@ -1,0 +1,39 @@
+{
+  "name": "stock-market-now",
+  "version": "1.0.0",
+  "description": "Chart stock market on the fly",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Juancard/stock-market-now"
+  },
+  "homepage": "",
+  "bugs": "https://github.com/Juancard/stock-market-now/issues",
+  "keywords": [
+    "MongoDB",
+    "Mongoose",
+    "full stack",
+    "Express",
+    "Node",
+    "javascript"
+  ],
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Juan Cardona",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "bootstrap": "^3.3.7",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.12.4",
+    "express-session": "^1.15.1",
+    "flash": "^1.1.0",
+    "jquery": "^3.1.1",
+    "mongoose": "^4.1.0",
+    "morgan": "^1.8.1",
+    "pug": "^2.0.0-beta10"
+  }
+}
