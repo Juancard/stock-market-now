@@ -10,10 +10,18 @@
   let companiesSymbol = getCompaniesSymbol(sectionCompanies);
 
   let btnAddCompany = document.getElementById('btnAdd');
-  btnAddCompany.addEventListener('click', addCompany);
+  btnAddCompany.addEventListener('click', sendAddCompany);
   let inputAddCompany = document.getElementById('toAdd');
 
   let chart;
+
+  let socket = io();
+  socket.on('company_added', (company, historicalData) => {
+    addCompany(company, historicalData);
+  });
+  socket.on('company_removed', (company) => {
+    removeCompany(company);
+  });
 
   ajaxFunctions.ready(() => {
 
@@ -31,12 +39,12 @@
 
   function onSectionClick(e){
     if (e.target && e.target.nodeName === "BUTTON") {
-      removeCompany(e.target.parentNode.id);
+      sendRemoveCompany(e.target.parentNode.id);
     }
     e.stopPropagation();
   }
 
-  function removeCompany(symbol){
+  function sendRemoveCompany(symbol){
     let urlThisCompany = urlCompanyData + '/' + symbol;
     if (sectionCompanies.childNodes.length <= 1) {
       return alert("Sorry: Chart has to have at least one company stock");
@@ -45,13 +53,18 @@
       data = JSON.parse(data);
       if (data) {
         if (data.error) return alert(data.message || data.error);
-        document.getElementById(data.symbol).outerHTML = "";
-        chart.series.filter(s => s.name == data.symbol)[0].remove(true);
+        removeCompany(data);
+        socket.emit('company_removed', data);
       }
     })
   }
 
-  function addCompany(event){
+  function removeCompany(company){
+    document.getElementById(company.symbol).outerHTML = "";
+    chart.series.filter(s => s.name == company.symbol)[0].remove(true);
+  }
+
+  function sendAddCompany(event){
     event.preventDefault();
 
     // Get company to add from value in input
@@ -76,24 +89,30 @@
       if (!isCompanyInChart(chart, company.Symbol)) {
         //company is not in chart. then:
 
-        // get historical stock data
-        let urlThisHistorical = urlHistoricData + company.Symbol;
-        ajaxFunctions.ajaxRequest('GET', urlThisHistorical, null, (data) => {
-          data = JSON.parse(data);
-          addHistoricalToChart(chart, company.Symbol, data);
-        })
-
-        // add company data
+        // add company data to db
         urlThisCompany = urlCompanyData + '/' + company.Symbol;
         ajaxFunctions.ajaxRequest('POST', urlThisCompany, {company}, (data) => {
-          data = JSON.parse(data);
-          addCompanyElement(sectionCompanies, data);
+          let newCompany = JSON.parse(data);
+
+          // get historical stock data
+          let urlThisHistorical = urlHistoricData + newCompany.symbol;
+          ajaxFunctions.ajaxRequest('GET', urlThisHistorical, null, (data) => {
+            let historicalData = JSON.parse(data);
+
+            addCompany(newCompany, historicalData);
+            socket.emit('company_added', newCompany, historicalData);
+          })
         })
       }
     });
     function isCompanyInChart(chart, symbol){
-      return chart.series.filter(s => s.name == symbol).length > 0
+      return chart.series.filter(s => s.name == symbol).length > 0;
     }
+  }
+
+  function addCompany(company, historicalData){
+    addCompanyElement(sectionCompanies, company);
+    addHistoricalToChart(chart, company.symbol, historicalData);
   }
 
   function addHistoricalToChart(chart, companySymbol, historical){

@@ -7,6 +7,8 @@ block append html_js
   script(src="https://code.jquery.com/jquery-3.1.1.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.6/js/highstock.js")
   script(src="https://code.highcharts.com/stock/modules/exporting.js")
+  script(src='/socket.io/socket.io.js')
+
   script.
     function createCompanyElement(company){
 
@@ -22,7 +24,7 @@ block append html_js
 
        let h3 = document.createElement("H3");
        h3.innerHTML = company.symbol;
-       
+
        let p = document.createElement("P");
        p.innerHTML = company.name + ' (' + company.symbol + ')';
 

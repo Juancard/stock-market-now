@@ -8,8 +8,12 @@ var logger = require("morgan");
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var flash = require('connect-flash');
+var http = require('http');
+var socket_io = require('socket.io');
 
 var app = express();
+let server = http.createServer(app);
+var io = socket_io(server);
 require('dotenv').load();
 
 mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGO_URI);
@@ -42,6 +46,7 @@ app.use('/bootstrap/js', express.static(__dirname + '/node_modules/bootstrap/dis
 app.use('/bootstrap/js/jquery', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
 app.use('/bootstrap/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 app.use('/bootstrap/fonts', express.static(__dirname + '/node_modules/bootstrap/dist/fonts')); // redirect CSS bootstrap
+app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io-client/dist')); // redirect socket.io
 
 
 // Data to send to Routes files
@@ -51,7 +56,19 @@ var appEnv = {
 
 routes(app, appEnv);
 
+io.on('connection', (socket) => {
+	socket.on('company_added', (company, historicalData) => {
+		socket.broadcast.emit('company_added', company, historicalData);
+	});
+	socket.on('company_removed', (company) => {
+		socket.broadcast.emit('company_removed', company);
+	});
+	socket.on('disconnect', () => {
+		console.log("User disconnected");
+	});
+});
+
 var port = process.env.PORT || 8080;
-app.listen(port,  function () {
+server.listen(port,  function () {
 	console.log('Node.js listening on port ' + port + '...');
 });
