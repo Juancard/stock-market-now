@@ -6,7 +6,7 @@
       urlCompanyData = appUrl + '/api/stock/company';
 
   let sectionCompanies = document.getElementById("companies");
-  sectionCompanies.addEventListener('click', onSectionClick, false);
+  sectionCompanies.addEventListener('click touchstart', onSectionClick, false);
   let companiesSymbol = getCompaniesSymbol(sectionCompanies);
 
   let btnAddCompany = document.getElementById('btnAdd');
