@@ -22,7 +22,7 @@
       let url = urlHistoricData + companySymbol;
       ajaxFunctions.ajaxRequest('GET', url, null, (data) => {
         data = JSON.parse(data);
-        addHistoricalToChart(chart, companiesSymbol, data);
+        addHistoricalToChart(chart, companySymbol, data);
       });
     });
 
@@ -42,7 +42,7 @@
       urlThisCompany = urlCompanyData + '/' + company.Symbol;
       ajaxFunctions.ajaxRequest('GET', urlThisHistorical, null, (data) => {
         data = JSON.parse(data);
-        addHistoricalToChart(chart, companySymbol, data);
+        addHistoricalToChart(chart, company.Symbol, data);
       })
       ajaxFunctions.ajaxRequest('POST', urlThisCompany, {company}, (data) => {
         data = JSON.parse(data);
@@ -134,12 +134,12 @@
           showInNavigator: true
         }
       },
-
+/*
       tooltip: {
         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
         valueDecimals: 2,
         split: true
-      },
+      },*/
 
       series: []
     });
