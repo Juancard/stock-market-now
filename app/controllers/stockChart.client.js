@@ -69,7 +69,7 @@
 
   function createChart() {
 
-    return new Highcharts.stockChart('container', {
+    return new Highcharts.stockChart('stockChart', {
 
       rangeSelector: {
         selected: 4

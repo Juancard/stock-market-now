@@ -9,7 +9,22 @@ block append html_js
   script(src="https://code.highcharts.com/stock/modules/exporting.js")
 
 block content
-  #container(style="height: 400px; min-width: 310px")
+  section#stockChart(style="height: 400px; min-width: 310px")
+
+  form.row
+    .input-group.col-md-offset-4.col-md-4
+      input#toAdd.form-control.input-lg(type="text", placeholder="GOOG, FB, etc...")
+      span.input-group-btn
+        button#btnAdd.btn.btn-lg.btn-default(type="submit") Add
+  br
+  section#companies.row.container
+    each company in companies
+      article(id=company.symbol).col-sm-3.col-md-3
+        button#btnRemove.btn.btn-xs.pull-right
+          span.glyphicon.glyphicon-remove
+        h3 #{company.symbol}
+        p #{company.name} (#{company.symbol})
+
 
 block append js
   script(type='text/javascript', src='/controllers/stockChart.client.js')

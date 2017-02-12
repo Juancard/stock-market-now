@@ -9,7 +9,12 @@ module.exports = (app, appEnv) => {
 
   app.route('/')
 		.get( (req, res) => {
-			res.render(appEnv.path + '/app/views/index.pug');
+      companyHandler.getCompanies((err, results) => {
+        let out = {
+          companies: (!err)? results : []
+        }
+        res.render(appEnv.path + '/app/views/index.pug', out);
+      })
 		});
   app.route('/api/stock/get_company/:symbol')
 		.get( (req, res) => {

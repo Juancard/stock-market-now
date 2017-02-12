@@ -10,7 +10,8 @@ let Company = new Schema({
 });
 
 Company
-  .statics.newInstance = (symbol, name, active=true) => {
+  .statics.newInstance = function newInstance(symbol,
+    name, active=true) {
     let newCompany = new this();
     newCompany.symbol = symbol;
     newCompany.name = name;

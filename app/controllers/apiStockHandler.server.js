@@ -10,7 +10,6 @@ function apiStockHandler () {
   },
 
   this.getHistorical = (companySymbol, days=3650, callback) => {
-    console.log(days);
     let parameters = {
       "Normalized": false,
       "NumberOfDays": days,

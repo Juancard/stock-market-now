@@ -37,22 +37,23 @@ header {
 	text-align: center;
 	padding: 0;
 }
+/**************************
+  ARTICLE
+****************************/
 
+article {
+  padding-top: 1px;
+  padding-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 0px;
+  border-left-style: solid;
+  background-color: #efefef;
+}
 
 /**************************
   FOOTER
 ****************************/
-/*
-footer {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding: 1rem;
-  background-color: #efefef;
-  text-align: center;
-}
-*/
+
 footer {
    position: absolute;
    bottom: 0;

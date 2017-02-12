@@ -8,14 +8,14 @@ function companyHandler(){
       .find({active:true})
       .exec((err, results) => {
         if (err) return callback(err);
-        return results;
+        return callback(false, results);
       });
   },
   this.addCompany = (company, callback) => {
     let newCompany = Company.newInstance(company.symbol, company.name);
     newCompany.save((err, result) => {
       if (err) return callback(err);
-      return result;
+      return callback(false, result);
     });
   }
 }
