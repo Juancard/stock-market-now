@@ -3,7 +3,7 @@
 let apiUrl = 'http://dev.markitondemand.com/MODApis/Api/v2';
 let request = require('request');
 
-function stockHandler () {
+function apiStockHandler () {
   this.getCompanyData = (companySymbol, callback) => {
     let url = apiUrl + '/Lookup/json?input=' + companySymbol;
     this.makeRequest(url, callback);
@@ -40,4 +40,4 @@ function stockHandler () {
   }
 }
 
-module.exports = stockHandler;
+module.exports = apiStockHandler;

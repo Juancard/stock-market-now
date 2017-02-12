@@ -2,8 +2,10 @@
 
 module.exports = (app, appEnv) => {
 
-  let StockHandler = require(appEnv.path + '/app/controllers/stockHandler.server.js');
-  let stockHandler = new StockHandler();
+  let ApiStockHandler = require(appEnv.path + '/app/controllers/apiStockHandler.server.js');
+  let apiStockHandler = new ApiStockHandler();
+  let CompanyHandler = require(appEnv.path + '/app/controllers/companyHandler.server.js');
+  let companyHandler = new CompanyHandler();
 
   app.route('/')
 		.get( (req, res) => {
@@ -12,7 +14,7 @@ module.exports = (app, appEnv) => {
   app.route('/api/stock/get_company/:symbol')
 		.get( (req, res) => {
       let companySymbol = req.params.symbol;
-      stockHandler.getCompanyData(companySymbol, (err, response, body) => {
+      apiStockHandler.getCompanyData(companySymbol, (err, response, body) => {
         res.json(body);
       });
 		});
@@ -20,7 +22,7 @@ module.exports = (app, appEnv) => {
 		.get( (req, res) => {
       let companySymbol = req.params.symbol;
       let days = undefined;
-      stockHandler.getHistorical(companySymbol, days, (err, response, body) => {
+      apiStockHandler.getHistorical(companySymbol, days, (err, response, body) => {
         res.json(body);
       });
 		});
