@@ -27,7 +27,16 @@ module.exports = (app, appEnv) => {
       companyHandler.addCompany(req.body.company, (err, result) => {
         res.json(result);
       });
-    });
+    })
+    .delete( (req, res) => {
+      companyHandler.deleteCompany(req.params.symbol, (err, result) => {
+        if (err) return res.json({
+          error: err,
+          message: 'Error: on deleting company. Please try again later'
+        });
+        res.json(result);
+      });
+    })
   app.route('/api/stock/get_historical/:symbol')
 		.get( (req, res) => {
       let companySymbol = req.params.symbol;

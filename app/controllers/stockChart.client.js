@@ -6,6 +6,7 @@
       urlCompanyData = appUrl + '/api/stock/company';
 
   let sectionCompanies = document.getElementById("companies");
+  sectionCompanies.addEventListener('click', onSectionClick);
   let companiesSymbol = getCompaniesSymbol(sectionCompanies);
 
   let btnAddCompany = document.getElementById('btnAdd');
@@ -27,6 +28,25 @@
     });
 
   });
+
+  function onSectionClick(e){
+    if (e.target && e.target.nodeName === "BUTTON") {
+      removeCompany(e.target.parentNode.id);
+      e.target.disabled = true;
+    }
+    e.stopPropagation();
+  }
+
+  function removeCompany(symbol){
+    let urlThisCompany = urlCompanyData + '/' + symbol;
+    ajaxFunctions.ajaxRequest('DELETE', urlThisCompany, null, (data) => {
+      data = JSON.parse(data);
+      if (data) {
+        document.getElementById(data.symbol).outerHTML = "";
+        chart.series.filter(s => s.name == data.symbol)[0].remove(true);
+      }
+    })
+  }
 
   function addCompany(event){
     event.preventDefault();

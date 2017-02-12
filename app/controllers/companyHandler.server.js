@@ -17,6 +17,16 @@ function companyHandler(){
       if (err) return callback(err);
       return callback(false, result);
     });
+  },
+  this.deleteCompany = (companySymbol, callback) => {
+    Company
+      .findOneAndUpdate({symbol: companySymbol}, { active: false })
+      .exec((err, result) => {
+        result.save((err, result) => {
+          if (err) return callback(err);
+          return callback(false, result);
+        });
+      });
   }
 }
 
