@@ -12,7 +12,7 @@ function companyHandler(){
       });
   },
   this.addCompany = (company, callback) => {
-    let newCompany = Company.newInstance(company.symbol, company.name);
+    let newCompany = Company.newInstance(company.Symbol, company.Name);
     newCompany.save((err, result) => {
       if (err) return callback(err);
       return callback(false, result);

@@ -16,13 +16,18 @@ module.exports = (app, appEnv) => {
         res.render(appEnv.path + '/app/views/index.pug', out);
       })
 		});
-  app.route('/api/stock/get_company/:symbol')
+  app.route('/api/stock/company/:symbol')
 		.get( (req, res) => {
       let companySymbol = req.params.symbol;
       apiStockHandler.getCompanyData(companySymbol, (err, response, body) => {
         res.json(body);
       });
-		});
+		})
+    .post( (req, res) => {
+      companyHandler.addCompany(req.body.company, (err, result) => {
+        res.json(result);
+      });
+    });
   app.route('/api/stock/get_historical/:symbol')
 		.get( (req, res) => {
       let companySymbol = req.params.symbol;

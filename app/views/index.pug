@@ -19,12 +19,32 @@ block content
   br
   section#companies.row.container
     each company in companies
-      article(id=company.symbol).col-sm-3.col-md-3
-        button#btnRemove.btn.btn-xs.pull-right
+      article(id=company.symbol).col-sm-4.col-md-3
+        button.btn.btn-xs.pull-right
           span.glyphicon.glyphicon-remove
         h3 #{company.symbol}
         p #{company.name} (#{company.symbol})
 
 
 block append js
+  script.
+    function createCompanyElement(company){
+       let article = document.createElement("ARTICLE");
+       article.className = "col-sm-4 col-md-3";
+       let button = document.createElement("BUTTON");
+       button.className = "btn btn-xs pull-right";
+       let span = document.createElement("SPAN");
+       span.className = "glyphicon glyphicon-remove";
+       let h3 = document.createElement("H3");
+       h3.innerHTML = company.symbol;
+       let p = document.createElement("P");
+       p.innerHTML = company.name + ' (' + company.symbol + ')';
+
+       button.appendChild(span);
+       article.appendChild(button);
+       article.appendChild(h3);
+       article.appendChild(p);
+
+       return article;
+    }
   script(type='text/javascript', src='/controllers/stockChart.client.js')

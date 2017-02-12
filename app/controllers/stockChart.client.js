@@ -3,10 +3,15 @@
 (function () {
 
   let urlHistoricData = appUrl + '/api/stock/get_historical/',
-      urlCompanyData = appUrl + '/api/stock/get_company/';
+      urlCompanyData = appUrl + '/api/stock/company';
 
   let sectionCompanies = document.getElementById("companies");
   let companiesSymbol = getCompaniesSymbol(sectionCompanies);
+
+  let btnAddCompany = document.getElementById('btnAdd');
+  btnAddCompany.addEventListener('click', addCompany);
+  let inputAddCompany = document.getElementById('toAdd');
+
   let chart;
 
   ajaxFunctions.ready(() => {
@@ -17,11 +22,42 @@
       let url = urlHistoricData + companySymbol;
       ajaxFunctions.ajaxRequest('GET', url, null, (data) => {
         data = JSON.parse(data);
-        chart.addSeries(makeSeries(companySymbol, data), true);
+        addHistoricalToChart(chart, companiesSymbol, data);
       });
     });
 
   });
+
+  function addCompany(event){
+    event.preventDefault();
+    let companySymbol = inputAddCompany.value;
+    if (!companySymbol) return;
+    let urlThisCompany = urlCompanyData + '/' + companySymbol;
+    ajaxFunctions.ajaxRequest('GET', urlThisCompany, null, (data) => {
+      data = JSON.parse(data);
+      if (data.length == 0)
+        return alert("Error: not existing stock code");
+      let company = data[0];
+      let urlThisHistorical = urlHistoricData + company.Symbol;
+      urlThisCompany = urlCompanyData + '/' + company.Symbol;
+      ajaxFunctions.ajaxRequest('GET', urlThisHistorical, null, (data) => {
+        data = JSON.parse(data);
+        addHistoricalToChart(chart, companySymbol, data);
+      })
+      ajaxFunctions.ajaxRequest('POST', urlThisCompany, {company}, (data) => {
+        data = JSON.parse(data);
+        addCompanyElement(sectionCompanies, data);
+      })
+    });
+  }
+
+  function addHistoricalToChart(chart, companySymbol, historical){
+    chart.addSeries(makeSeries(companySymbol, historical), true);
+  }
+
+  function addCompanyElement(element, company){
+    element.appendChild(createCompanyElement(company));
+  }
 
   function makeSeries(companySymbol, data) {
     let ohlcData = getOhlcData(data);
