@@ -38,15 +38,13 @@
   });
 
   function onSectionClick(e){
-    alert(e.target.nodeName);
-    if (e.target && e.target.nodeName === "ARTICLE") {
-      alert("article");
-    }
-
+    let companySymbol;
     if (e.target && e.target.nodeName === "BUTTON") {
-      alert("button");
-      sendRemoveCompany(e.target.parentNode.id);
+      companySymbol = e.target.parentNode.id;
+    } else if (e.target && e.target.nodeName === "SPAN") {
+      companySymbol = e.target.parentNode.parentNode.id;
     }
+    addCompany(companySymbol);
     e.stopPropagation();
   }
 
