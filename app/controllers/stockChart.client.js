@@ -2,18 +2,18 @@
 
 (function () {
 
-  let seriesOptions = [],
-      names = ['MSFT', 'AAPL', 'GOOG'];
   let urlHistoricData = appUrl + '/api/stock/get_historical/',
       urlCompanyData = appUrl + '/api/stock/get_company/';
 
+  let sectionCompanies = document.getElementById("companies");
+  let companiesSymbol = getCompaniesSymbol(sectionCompanies);
   let chart;
 
   ajaxFunctions.ready(() => {
 
     chart = createChart();
 
-    names.forEach((companySymbol, i) => {
+    companiesSymbol.forEach((companySymbol, i) => {
       let url = urlHistoricData + companySymbol;
       ajaxFunctions.ajaxRequest('GET', url, null, (data) => {
         data = JSON.parse(data);
@@ -107,6 +107,15 @@
 
       series: []
     });
+  }
+
+  function getCompaniesSymbol(elementContainer){
+    let elementCompanies = elementContainer.childNodes;
+    let companiesSymbol = [];
+    for (let i=0; i<elementCompanies.length; i++){
+      companiesSymbol.push(elementCompanies[i].id);
+    }
+    return companiesSymbol;
   }
 
 })();
