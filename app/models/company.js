@@ -12,11 +12,11 @@ let Company = new Schema({
 Company
   .statics.newInstance = function newInstance(symbol,
     name, active=true) {
-    let newCompany = new this();
-    newCompany.symbol = symbol;
-    newCompany.name = name;
-    newCompany.active = active;
-    return newCompany;
+    let companyInstance = new this();
+    companyInstance.symbol = symbol;
+    companyInstance.name = name;
+    companyInstance.active = active;
+    return companyInstance;
   };
 
 module.exports = mongoose.model('Company', Company);

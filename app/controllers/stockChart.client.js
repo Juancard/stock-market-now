@@ -32,16 +32,19 @@
   function onSectionClick(e){
     if (e.target && e.target.nodeName === "BUTTON") {
       removeCompany(e.target.parentNode.id);
-      e.target.disabled = true;
     }
     e.stopPropagation();
   }
 
   function removeCompany(symbol){
     let urlThisCompany = urlCompanyData + '/' + symbol;
+    if (sectionCompanies.childNodes.length <= 1) {
+      return alert("Sorry: Chart has to have at least one company stock");
+    }
     ajaxFunctions.ajaxRequest('DELETE', urlThisCompany, null, (data) => {
       data = JSON.parse(data);
       if (data) {
+        if (data.error) return alert(data.message || data.error);
         document.getElementById(data.symbol).outerHTML = "";
         chart.series.filter(s => s.name == data.symbol)[0].remove(true);
       }
@@ -50,25 +53,47 @@
 
   function addCompany(event){
     event.preventDefault();
+
+    // Get company to add from value in input
     let companySymbol = inputAddCompany.value;
+
+    // If value in input is empty, do nothing
     if (!companySymbol) return;
+
+    // Is it a valid company symbol?
     let urlThisCompany = urlCompanyData + '/' + companySymbol;
     ajaxFunctions.ajaxRequest('GET', urlThisCompany, null, (data) => {
       data = JSON.parse(data);
+
+      // if no companies matches the symbol, error
       if (data.length == 0)
         return alert("Error: not existing stock code");
+
+      // get first company that matches symbol
       let company = data[0];
-      let urlThisHistorical = urlHistoricData + company.Symbol;
-      urlThisCompany = urlCompanyData + '/' + company.Symbol;
-      ajaxFunctions.ajaxRequest('GET', urlThisHistorical, null, (data) => {
-        data = JSON.parse(data);
-        addHistoricalToChart(chart, company.Symbol, data);
-      })
-      ajaxFunctions.ajaxRequest('POST', urlThisCompany, {company}, (data) => {
-        data = JSON.parse(data);
-        addCompanyElement(sectionCompanies, data);
-      })
+
+      //company exists, but... is it already in chart?
+      if (!isCompanyInChart(chart, company.Symbol)) {
+        //company is not in chart. then:
+
+        // get historical stock data
+        let urlThisHistorical = urlHistoricData + company.Symbol;
+        ajaxFunctions.ajaxRequest('GET', urlThisHistorical, null, (data) => {
+          data = JSON.parse(data);
+          addHistoricalToChart(chart, company.Symbol, data);
+        })
+
+        // add company data
+        urlThisCompany = urlCompanyData + '/' + company.Symbol;
+        ajaxFunctions.ajaxRequest('POST', urlThisCompany, {company}, (data) => {
+          data = JSON.parse(data);
+          addCompanyElement(sectionCompanies, data);
+        })
+      }
     });
+    function isCompanyInChart(chart, symbol){
+      return chart.series.filter(s => s.name == symbol).length > 0
+    }
   }
 
   function addHistoricalToChart(chart, companySymbol, historical){

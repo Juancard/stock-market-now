@@ -12,11 +12,22 @@ function companyHandler(){
       });
   },
   this.addCompany = (company, callback) => {
-    let newCompany = Company.newInstance(company.Symbol, company.Name);
-    newCompany.save((err, result) => {
-      if (err) return callback(err);
-      return callback(false, result);
-    });
+    Company
+      .findOne({symbol: company.Symbol})
+      .exec((err, result) => {
+        if (err) return callback(err);
+        let newCompany;
+        if (result) {
+          newCompany = result;
+          newCompany.active = true;
+        } else {
+          newCompany = Company.newInstance(company.Symbol, company.Name);
+        }
+        newCompany.save((err, result) => {
+          if (err) return callback(err);
+          return callback(false, result);
+        });
+      });
   },
   this.deleteCompany = (companySymbol, callback) => {
     Company
