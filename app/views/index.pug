@@ -48,7 +48,7 @@ block content
   section#companies.row.container
     each company in companies
       article(id=company.symbol).col-sm-5.col-sm-offset-1
-        button.btn.btn-xs.pull-right
+        button.btn.pull-right
           span.glyphicon.glyphicon-remove
         h3 #{company.symbol}
         p #{company.name} (#{company.symbol})
