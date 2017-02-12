@@ -38,9 +38,9 @@
   });
 
   function onSectionClick(e){
-    console.log("outside", e.target.nodeName);
+    alert("outside", e.target.nodeName);
     if (e.target && e.target.nodeName === "BUTTON") {
-      console.log("inside button:",e.target.nodeName, e.target.parentNode.id);
+      alert("inside button:",e.target.nodeName, e.target.parentNode.id);
       sendRemoveCompany(e.target.parentNode.id);
     }
     e.stopPropagation();
