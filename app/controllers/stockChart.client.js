@@ -44,7 +44,7 @@
     } else if (e.target && e.target.nodeName === "SPAN") {
       companySymbol = e.target.parentNode.parentNode.id;
     }
-    addCompany(companySymbol);
+    removeCompany(companySymbol);
     e.stopPropagation();
   }
 
