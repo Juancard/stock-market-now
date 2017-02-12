@@ -3,16 +3,73 @@
 (function () {
 
   let seriesOptions = [],
-      seriesCounter = 0,
       names = ['MSFT', 'AAPL', 'GOOG'];
   let urlHistoricData = appUrl + '/api/stock/get_historical/',
       urlCompanyData = appUrl + '/api/stock/get_company/';
 
   let chart;
 
+  ajaxFunctions.ready(() => {
+
+    chart = createChart();
+
+    names.forEach((companySymbol, i) => {
+      let url = urlHistoricData + companySymbol;
+      ajaxFunctions.ajaxRequest('GET', url, null, (data) => {
+        data = JSON.parse(data);
+        chart.addSeries(makeSeries(companySymbol, data), true);
+      });
+    });
+
+  });
+
+  function makeSeries(companySymbol, data) {
+    let ohlcData = getOhlcData(data);
+
+    // set the allowed units for data grouping
+    let groupingUnits = [[
+      'week',                         // unit name
+      [1]                             // allowed multiples
+    ], [
+      'month',
+      [1, 2, 3, 4, 6]
+    ]];
+
+    return {
+      name: companySymbol,
+      data: ohlcData,
+      dataGrouping: {
+        units: groupingUnits
+      }
+    };
+  }
+
+  function getOhlcData(json) {
+    var dates = json.Dates || [];
+    var elements = json.Elements || [];
+    var chartSeries = [];
+
+    if (elements[0]){
+
+        for (var i = 0, datLen = dates.length; i < datLen; i++) {
+            var dat = fixDate( dates[i] );
+            var pointData = [
+                dat,
+                elements[0].DataSeries['close'].values[i]
+            ];
+            chartSeries.push( pointData );
+        };
+    }
+    return chartSeries;
+  }
+  function fixDate(dateIn) {
+      var dat = new Date(dateIn);
+      return Date.UTC(dat.getFullYear(), dat.getMonth(), dat.getDate());
+  };
+
   function createChart() {
 
-    chart = new Highcharts.stockChart('container', {
+    return new Highcharts.stockChart('container', {
 
       rangeSelector: {
         selected: 4
@@ -48,68 +105,8 @@
         split: true
       },
 
-      series: seriesOptions
+      series: []
     });
   }
 
-  ajaxFunctions.ready(() => {
-
-    names.forEach((name, i) => {
-      let url = urlHistoricData + name;
-      ajaxFunctions.ajaxRequest('GET', url, null, (data) => {
-
-        data = JSON.parse(data);
-
-        let ohlcData = getOhlcData(data);
-
-        // set the allowed units for data grouping
-        var groupingUnits = [[
-          'week',                         // unit name
-          [1]                             // allowed multiples
-        ], [
-          'month',
-          [1, 2, 3, 4, 6]
-        ]];
-
-        seriesOptions[i] = {
-          name: name,
-          data: ohlcData,
-          dataGrouping: {
-            units: groupingUnits
-          }
-        };
-
-        // As we're loading the data asynchronously, we don't know what order it will arrive. So
-        // we keep a counter and create the chart when all the data is loaded.
-        seriesCounter += 1;
-
-        if (seriesCounter === names.length) {
-          createChart();
-        }
-      });
-    });
-  });
-
-  function getOhlcData(json) {
-    var dates = json.Dates || [];
-    var elements = json.Elements || [];
-    var chartSeries = [];
-
-    if (elements[0]){
-
-        for (var i = 0, datLen = dates.length; i < datLen; i++) {
-            var dat = fixDate( dates[i] );
-            var pointData = [
-                dat,
-                elements[0].DataSeries['close'].values[i]
-            ];
-            chartSeries.push( pointData );
-        };
-    }
-    return chartSeries;
-  }
-  function fixDate(dateIn) {
-      var dat = new Date(dateIn);
-      return Date.UTC(dat.getFullYear(), dat.getMonth(), dat.getDate());
-  };
 })();
