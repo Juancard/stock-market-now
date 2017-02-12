@@ -17,6 +17,11 @@ block html
           link(rel='stylesheet', href="/bootstrap/css/bootstrap.min.css")
           link(rel='stylesheet', href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")
       block html_js
+        // jQuery (necessary for Bootstrap's JavaScript plugins)
+        script(src='/bootstrap/js/jquery/jquery.min.js')
+        script(src='/bootstrap/js/bootstrap.min.js')
+        script(src='https://raw.github.com/HubSpot/pace/v1.0.2/pace.min.js')
+        script(src='/bootstrap/js/bootstrap.min.js')
     block body
       body
         .myContent.container-fluid
@@ -25,9 +30,4 @@ block html
           br
           include footer.pug
         block js
-          // jQuery (necessary for Bootstrap's JavaScript plugins)
-          script(src='/bootstrap/js/jquery/jquery.min.js')
-          script(src='/bootstrap/js/bootstrap.min.js')
-          script(src='https://raw.github.com/HubSpot/pace/v1.0.2/pace.min.js')
-          script(src='/bootstrap/js/bootstrap.min.js')
           script(type='text/javascript', src='/common/ajax-functions.js')

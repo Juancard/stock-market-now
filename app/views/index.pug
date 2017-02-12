@@ -2,22 +2,14 @@ extends skeleton.pug
 
 block append css
   link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.6/css/highcharts.css")
+
 block append html_js
   script(src="https://code.jquery.com/jquery-3.1.1.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.6/js/highstock.js")
+  script(src="https://code.highcharts.com/stock/modules/exporting.js")
+
 block content
   #container(style="height: 400px; min-width: 310px")
 
 block append js
-  script.
-    ajaxFunctions.ready(() => {
-      var myChart = Highcharts.stockChart('container', {
-         rangeSelector: {
-            selected: 1
-         },
-         series: [{
-            name: 'USD to EUR',
-            data: [1,2,3,1] // predefined JavaScript array
-         }]
-      });
-    });
+  script(type='text/javascript', src='/controllers/stockChart.client.js')
