@@ -6,7 +6,7 @@
       urlCompanyData = appUrl + '/api/stock/company';
 
   let sectionCompanies = document.getElementById("companies");
-  sectionCompanies.addEventListener('click touchstart', onSectionClick, false);
+  sectionCompanies.addEventListener('click', onSectionClick, false);
   let companiesSymbol = getCompaniesSymbol(sectionCompanies);
 
   let btnAddCompany = document.getElementById('btnAdd');
@@ -38,7 +38,9 @@
   });
 
   function onSectionClick(e){
+    console.log("outside", e.target.nodeName);
     if (e.target && e.target.nodeName === "BUTTON") {
+      console.log("inside button:",e.target.nodeName, e.target.parentNode.id);
       sendRemoveCompany(e.target.parentNode.id);
     }
     e.stopPropagation();
