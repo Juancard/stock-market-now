@@ -38,9 +38,13 @@
   });
 
   function onSectionClick(e){
-    alert("outside", e.target.nodeName);
+    alert(e.target.nodeName);
+    if (e.target && e.target.nodeName === "ARTICLE") {
+      alert("article");
+    }
+
     if (e.target && e.target.nodeName === "BUTTON") {
-      alert("inside button:",e.target.nodeName, e.target.parentNode.id);
+      alert("button");
       sendRemoveCompany(e.target.parentNode.id);
     }
     e.stopPropagation();
