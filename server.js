@@ -43,7 +43,7 @@ app.set('view engine', 'pug');
 
 // SETIING UP CLIENT SIDE
 app.use('/bootstrap/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
-app.use('/bootstrap/js/jquery', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
+app.use('/js/jquery', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
 app.use('/bootstrap/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 app.use('/bootstrap/fonts', express.static(__dirname + '/node_modules/bootstrap/dist/fonts')); // redirect CSS bootstrap
 app.use('/socket.io', express.static(__dirname + '/node_modules/socket.io-client/dist')); // redirect socket.io
